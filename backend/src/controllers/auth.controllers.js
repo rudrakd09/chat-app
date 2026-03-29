@@ -1,7 +1,8 @@
+import { sendWelcomeEmail } from "../emails/emailsHandlers.js";
 import { generateToken } from "../lib/utils.js";
 import User from "../models/user.models.js";
 import bcrypt from "bcryptjs";
-
+import {ENV }from "../lib/env.js"
 const signup = async (req, res) => {
   try {
     const { fullName, email, password } = req.body;
@@ -38,21 +39,30 @@ const signup = async (req, res) => {
     });
 
     if(newUser){
-      generateToken(newUser._id , res) // ig this id is which it is stored by in database   
-      await newUser.save();
+      const savedUser = await newUser.save();
+      generateToken(savedUser._id , res) // ig this id is which it is stored by in database   
+     
 
       res.status(201).json({
-      _id: newUser._id,
-      fullName: newUser.fullName,
-      email: newUser.email,
-      profilePic: newUser.profilePic,
+      _id: savedUser._id,
+      fullName: savedUser.fullName,
+      email: savedUser.email,
+      profilePic: savedUser.profilePic,
       });
+
+
+      try{
+        await sendWelcomeEmail(savedUser.email , savedUser.fullName , ENV.CLIENT_URL )
+      }catch(error){
+        console.error("Failed to send the welcome error : ",error);
+      }
 
     }else{
       res.status(400).json({
         message : "Invalid user data"
       })
     } 
+
   } catch (error) {
     console.error("error in signup controller:", error.message);
     res.status(500).json({ message: "Internal server error" });

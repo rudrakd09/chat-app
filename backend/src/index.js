@@ -1,15 +1,15 @@
 import express from "express"
 import authRoutes from "./routes/auth.route.js";
-import dotenv from 'dotenv';
+import ENV from "./lib/env.js"
 import { connectDB } from "./lib/db.js";
 import path from "path";
 
 
 
-dotenv.config();  // packged is used so that we can use var in .env 
+
 
 const app = express();
-const PORT = process.env.PORT || 3000 ;
+const PORT = ENV.PORT || 3000 ;
 
  
 app.use(express.json()) ;// alllow us to extract the json data out of req  body
