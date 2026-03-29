@@ -2,6 +2,9 @@ import express from "express"
 import authRoutes from "./routes/auth.route.js";
 import dotenv from 'dotenv';
 import { connectDB } from "./lib/db.js";
+import path from "path";
+
+
 
 dotenv.config();  // packged is used so that we can use var in .env 
 
@@ -9,12 +12,10 @@ const app = express();
 const PORT = process.env.PORT || 3000 ;
 
  
-app.use(express.json()) ;// alllow us to extract the json data out of body
+app.use(express.json()) ;// alllow us to extract the json data out of req  body
 app.use("/api/auth" , authRoutes  )
 
-app.listen( PORT ,(req, res)=>{
-    
-})
+
 const startServer = async () => {
   try {
     await connectDB();
