@@ -1,7 +1,7 @@
 import dotenv from "dotenv"
 dotenv.config(); 
 
-export const ENV  =  {
+const ENV  =  {
     PORT :  process.env.PORT || 3000,
     MONGODB_URL  :  process.env.MONGODB_URL,
     JWT_SECRET :  process.env.JWT_SECRET,
@@ -13,16 +13,6 @@ export const ENV  =  {
     CLIENT_URL : process.env.CLIENT_URL
 }
 
-// MONGODB_URL  = mongodb+srv://sohamn7805_db_user:mUlEw1L89ZYUfj4i@cluster0.zltikwo.mongodb.net/chatify_db?appName=Cluster0
-// PORT  = 3000
-// NODE_ENV = development
- 
-// JWT_SECRET = mysecretkey
+export default ENV // if we do this -->> import ENV from "./env.js"
+// else if export const ENV -->> import {ENV} yeh diff hain
 
-
-// RESEND_API_KEY = re_7ARMNWJQ_6KvFCrirx5RzL6g5PoTLis1M
-
-// EMAIL_FROM = "onboarding@resend.dev"
-// EMAIL_FROM_NAME  =  "Soham Naukudkar"
-
-// CLIENT_URL = http://localhost:3000
