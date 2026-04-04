@@ -3,6 +3,7 @@ import { generateToken } from "../lib/utils.js";
 import User from "../models/user.models.js";
 import bcrypt from "bcryptjs";
 import ENV from "../lib/env.js"
+import cloudinary from "../lib/cloudinary.js"
 
 const signup = async (req, res) => {
   try {
@@ -103,6 +104,33 @@ const logout = (_, res) => {
   res.status(200).json({message : "Logged out Succecssfully"})
 }
 
-export { signup, login, logout };
+const updateProfile = async (req ,res) => {
+
+  try{
+    const {profilePic}  = req.body
+    if(!profilePic) res.status(400).json({message : "Profile pic is req"})
+
+    const userId = req.user._id;
+
+    const uploadResponse =  await cloudinary.uploader.upload(profilePic)
+
+    const updatedUser =  await User.findByIdAndUpdate( userId,
+      {profilePic : uploadResponse.secure_url },
+      {new : true }
+    );
+
+    res.status(200).json(updatedUser);
+
+
+  } catch (err ) {
+    console.log("Error in update profile :",err);
+    res.status(500).json({
+      message :  "Internal Server Error"
+    })
+  }
+    
+}
+
+export { signup, login, logout , updateProfile };
 
 
