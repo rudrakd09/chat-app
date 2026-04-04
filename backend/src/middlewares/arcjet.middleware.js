@@ -17,7 +17,7 @@ export const arcjetProtection = async( req, res ,next ) => {
         }
 
         // check for spoofedBots  
-        if( decision.results.some(isSpoofedBot())){  //instead of some can also use for loop
+        if( decision.results.some(isSpoofedBot)){  //instead of some can also use for loop
             return res.status(403).json({
                 error : "Detected spoofed bot.",
                 message : "Detected Malicious bot activity"})
