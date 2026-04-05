@@ -1,5 +1,6 @@
 import express from "express"
 import path from "path"
+import cors from "cors"
 import authRoutes from "./routes/auth.route.js";
 import ENV from "./lib/env.js"
 import { connectDB } from "./lib/db.js";
@@ -17,6 +18,7 @@ const PORT = ENV.PORT || 3000 ;
 
  
 app.use(express.json()) ;// alllow us to extract the json data out of req  body
+app.use(cors({origin : ENV.CLIENT_URL , credentials: true }))
 app.use(cookieParser())
 
 
