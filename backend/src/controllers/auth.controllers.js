@@ -105,31 +105,83 @@ const logout = (_, res) => {
 }
 
 const updateProfile = async (req ,res) => {
-
   try{
-    const {profilePic}  = req.body
-    if(!profilePic) res.status(400).json({message : "Profile pic is req"})
-
+    const {profilePic, about, fullName} = req.body;
     const userId = req.user._id;
 
-    const uploadResponse =  await cloudinary.uploader.upload(profilePic)
+    if (!profilePic && about === undefined && fullName === undefined) {
+       return res.status(400).json({message: "No valid fields provided for update"});
+    }
 
-    const updatedUser =  await User.findByIdAndUpdate( userId,
-      {profilePic : uploadResponse.secure_url },
-      {new : true }
-    ).select("-password")
+    const updates = {};
+    if (about !== undefined) updates.about = about;
+    if (fullName !== undefined) updates.fullName = fullName;
+
+    if (profilePic) {
+       const uploadResponse = await cloudinary.uploader.upload(profilePic);
+       updates.profilePic = uploadResponse.secure_url;
+    }
+
+    const updatedUser = await User.findByIdAndUpdate( userId,
+      { $set: updates },
+      { new: true }
+    ).select("-password");
 
     res.status(200).json(updatedUser);
 
-
-  } catch (err ) {
+  } catch (err) {
     console.log("Error in update profile :",err);
-    res.status(500).json({
-      message :  "Internal Server Error"
-    })
+    res.status(500).json({ message: "Internal Server Error" });
   }
-    
 }
+
+export const toggleBlockUser = async (req, res) => {
+    try {
+        const myId = req.user._id;
+        const targetId = req.params.id;
+
+        const user = await User.findById(myId);
+        if (!user.blockedUsers) user.blockedUsers = [];
+
+        const hasBlocked = user.blockedUsers.some(id => id.toString() === targetId);
+
+        if (hasBlocked) {
+            user.blockedUsers = user.blockedUsers.filter(id => id.toString() !== targetId);
+        } else {
+            user.blockedUsers.push(targetId);
+        }
+        await user.save();
+        
+        res.status(200).json(user.blockedUsers);
+    } catch (e) {
+        console.log("Error inside toggleBlock:", e.message);
+        res.status(500).json({ message: "Server error" });
+    }
+};
+
+export const toggleFavoriteUser = async (req, res) => {
+    try {
+        const myId = req.user._id;
+        const targetId = req.params.id;
+
+        const user = await User.findById(myId);
+        if (!user.favoriteUsers) user.favoriteUsers = [];
+
+        const hasFavorited = user.favoriteUsers.some(id => id.toString() === targetId);
+
+        if (hasFavorited) {
+            user.favoriteUsers = user.favoriteUsers.filter(id => id.toString() !== targetId);
+        } else {
+            user.favoriteUsers.push(targetId);
+        }
+        await user.save();
+
+        res.status(200).json(user.favoriteUsers);
+    } catch (e) {
+        console.log("Error inside toggleFavorite:", e.message);
+        res.status(500).json({ message: "Server error" });
+    }
+};
 
 export { signup, login, logout , updateProfile };
 

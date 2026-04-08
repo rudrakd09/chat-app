@@ -70,13 +70,43 @@ export const useAuthStore = create((set, get) => ({
   },
 
   updateProfile: async (data) => {
+    set({ isUpdatingProfile: true });
     try {
       const res = await axiosInstance.put("/auth/update-profile", data);
       set({ authUser: res.data });
       toast.success("Profile updated successfully");
     } catch (error) {
-      console.log("Error in update profile:", error);
-      toast.error(error.response?.data?.message || "An error occurred");
+      console.log("error in update profile:", error);
+      toast.error(error.response.data.message);
+    } finally {
+      set({ isUpdatingProfile: false });
+    }
+  },
+
+  toggleBlockUser: async (userId) => {
+    try {
+      const res = await axiosInstance.post(`/auth/block/${userId}`);
+      set((state) => ({ authUser: { ...state.authUser, blockedUsers: res.data } }));
+    } catch(err) {
+      toast.error("Failed to update block list");
+    }
+  },
+
+  toggleFavoriteUser: async (userId) => {
+    try {
+      const res = await axiosInstance.post(`/auth/favorite/${userId}`);
+      set((state) => ({ authUser: { ...state.authUser, favoriteUsers: res.data } }));
+    } catch(err) {
+      toast.error("Failed to update favorites");
+    }
+  },
+
+  toggleStarMessage: async (messageId) => {
+    try {
+      const res = await axiosInstance.post(`/messages/star/${messageId}`);
+      set((state) => ({ authUser: { ...state.authUser, starredMessages: res.data } }));
+    } catch(err) {
+      toast.error("Failed to star message");
     }
   },
 

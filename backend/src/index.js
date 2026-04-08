@@ -7,23 +7,30 @@ import { connectDB } from "./lib/db.js";
 // import path from "path";
 import cookieParser from "cookie-parser"
 import messageRoutes from "./routes/message.route.js"
+import statusRoutes from "./routes/status.route.js"
+import aiRoutes from "./routes/ai.route.js"
+import groupRoutes from "./routes/group.route.js"
+import "./lib/scheduler.js";
 
 
 
 
-const app = express();
+import { app, server } from "./lib/socket.js";
 const __dirname  = path.resolve();
 
 const PORT = ENV.PORT || 3000 ;
 
  
-app.use(express.json()) ;// alllow us to extract the json data out of req  body
+app.use(express.json({ limit: "50mb" })) ;// allow us to extract the json data out of req body
 app.use(cors({origin : ENV.CLIENT_URL , credentials: true }))
 app.use(cookieParser())
 
 
 app.use("/api/auth" , authRoutes  )
 app.use("/api/messages", messageRoutes)
+app.use("/api/statuses", statusRoutes)
+app.use("/api/ai", aiRoutes)
+app.use("/api/groups", groupRoutes)
 
 
 // make ready for the deployment 
@@ -38,7 +45,7 @@ if (ENV.NODE_ENV === "production") {
 const startServer = async () => {
   try {
     await connectDB();
-    app.listen(PORT, () => {
+    server.listen(PORT, () => {
       console.log("Server is running on PORT", PORT);
     });
   } catch (error) {

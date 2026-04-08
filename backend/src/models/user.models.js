@@ -19,7 +19,27 @@ const userSchema =new  mongoose.Schema(
         profilePic : {
             type : String,
             default : "",
-        }
+        },
+        phoneNumber: {
+            type: String,
+            default: "",
+        },
+        about: {
+            type: String,
+            default: "Hey there! I am using Chatify.",
+        },
+        blockedUsers: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+        }],
+        favoriteUsers: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+        }],
+        starredMessages: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Message",
+        }]
     },
     {
         timestamps : true     // createdAT & UpdatedAt

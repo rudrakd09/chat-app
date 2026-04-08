@@ -15,7 +15,8 @@ const ENV  =  {
     CLOUDINARY_API_KEY : process.env.CLOUDINARY_API_KEY,
     CLOUDINARY_API_SECRET :   process.env.CLOUDINARY_API_SECRET,
     ARCJET_KEY : process.env.ARCJET_KEY,
-    ARCJET_ENV  :  process.env.ARCJET_ENV
+    ARCJET_ENV  :  process.env.ARCJET_ENV,
+    GEMINI_API_KEY : process.env.GEMINI_API_KEY
 }
 
 export default ENV // if we do this -->> import ENV from "./env.js"

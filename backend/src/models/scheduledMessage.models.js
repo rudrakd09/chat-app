@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const messageSchema = new mongoose.Schema(
+const scheduledMessageSchema = new mongoose.Schema(
   {
     senderId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -10,12 +10,7 @@ const messageSchema = new mongoose.Schema(
     receiverId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: false, // Optional because a message might be aimed at a group instead
-    },
-    groupId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Group",
-      required: false,
+      required: true,
     },
     text: {
       type: String,
@@ -25,10 +20,14 @@ const messageSchema = new mongoose.Schema(
     image: {
       type: String,
     },
+    scheduledAt: {
+      type: Date,
+      required: true,
+    },
   },
   { timestamps: true }
 );
 
-const Message = mongoose.model("Message", messageSchema);
+const ScheduledMessage = mongoose.model("ScheduledMessage", scheduledMessageSchema);
 
-export default Message;
+export default ScheduledMessage;

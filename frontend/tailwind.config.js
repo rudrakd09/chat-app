@@ -7,10 +7,15 @@ export default {
     extend: {
       animation: {
         border: "border 4s linear infinite",
+        progress: "progress 5s linear forwards",
       },
       keyframes: {
         border: {
           to: { "--border-angle": "360deg" },
+        },
+        progress: {
+          '0%': { width: '0%' },
+          '100%': { width: '100%' },
         },
       },
     },
