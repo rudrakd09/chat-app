@@ -76,11 +76,11 @@ const login = async  (req, res) => {
 
   try{
     const user = await User.findOne({email})
-    if(!user) res.status(400).json({message : "Invalid Credentials"})
+    if(!user) return res.status(400).json({message : "Invalid Credentials"})
       //  never tell the client which one is incorrect : password or email
     const isPasswordCorrect = await bcrypt.compare( password , user.password)
 
-    if(!isPasswordCorrect) res.status(400).json({message : "Invalid Credentials"})
+    if(!isPasswordCorrect) return res.status(400).json({message : "Invalid Credentials"})
 
     generateToken(user._id ,res)
 

@@ -4,9 +4,10 @@ import ChatPage from './pages/ChatPage'
 import LoginPage from './pages/LoginPage'
 import SignUpPage from './pages/SignUpPage'
 import { useAuthStore } from './store/useAuthStore'
-import { loadConfigFromFile } from 'vite'
+// import { loadConfigFromFile } from 'vite'
 import { useEffect } from 'react'
 import { Toaster } from 'react-hot-toast'
+import PageLoader from './components/PageLoader.jsx'
 
 function App() {
 
@@ -29,7 +30,7 @@ function App() {
     <Routes>
       <Route  path = "/" element = { authUser ?  <ChatPage/> : <Navigate to ={"/login"}/> }   />
       <Route  path = "/login" element = { !authUser ?  <LoginPage/>  : <Navigate to ={"/"}/> }  />
-      <Route  path = "/signup" element = { !authUser ?  <LoginPage/>  : <Navigate to ={"/"}/> }  />
+      <Route  path = "/signup" element = { !authUser ?  <SignUpPage/>  : <Navigate to ={"/"}/> }  />
       
     </Routes>
     <Toaster/>
